@@ -1,0 +1,24 @@
+{
+  "name": "zammad-js-api",
+  "version": "1.0.0",
+  "description": "Zammad API implementation for JS",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exanion/zammad-js-api.git"
+  },
+  "keywords": [
+    "zammad",
+    "ticket",
+    "helpdesk"
+  ],
+  "author": "Exanion UG (haftungsbeschraenkt)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/exanion/zammad-js-api/issues"
+  },
+  "homepage": "https://github.com/exanion/zammad-js-api#readme"
+}
