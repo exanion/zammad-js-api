@@ -1,0 +1,2 @@
+# Zammad JS API implementation
+
