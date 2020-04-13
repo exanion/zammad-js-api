@@ -54,12 +54,13 @@ class DummyEndpointProvider {
      * @param {*} data Data to send on this endpoint
      * @return Endpoint object for further modification/ handling
      */
-    createEndpoint(method, path, data) {
+    createEndpoint(method, path, data, callback = null) {
         let endpoint = new DummyEndpoint(
             this.app,
             method,
             this.prefix + path,
-            data
+            data,
+            callback
         );
 
         if (!this.endpoints[path]) {
@@ -80,13 +81,18 @@ class DummyEndpoint {
      * @param {*} method HTTP method to use
      * @param {*} path path to fulfill, e.g. "/api/v1/users"
      * @param {*} data Data to rsend
+     * @param {*} callback Callback function on request to endpoint
      */
-    constructor(app, method, path, data) {
+    constructor(app, method, path, data, callback = null) {
         this.method = method;
         this.path = path;
         this.data = data;
+        this.callback = callback;
 
         let appCallback = (req, res) => {
+            if(callback){
+                callback(req);
+            }
             return res.send(this.data);
         };
 
