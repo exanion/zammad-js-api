@@ -3,18 +3,33 @@
  * @author Peter Kappelt
  */
 
-const axios = require("axios");
+const _axios = require("axios");
+let axios;
 const endpoints = require("./Endpoints");
 const ApiError = require("./ApiError");
 
 class ZammadApi {
     /**
      * Connect to a zammad API
-     * @param {*} host Hostname of Zammad instance with protocol and port
+     * @param {string} host Hostname of Zammad instance with protocol and port
+     * @param {string} username Username for authentication
+     * @param {string} password Password for authentication
      * @todo hostname check and sanitising
      */
-    constructor(host) {
+    constructor(host, username, password) {
         this.host = host;
+        this.username = username;
+        this.password = password;
+        axios = _axios.create({
+            baseURL: this.host + endpoints.PREFIX,
+            auth: {
+                username,
+                password,
+            },
+            headers: {
+                "User-Agent": "Zammad Mobile by Exanion/1.0"
+            }
+        });
     }
 
     /**
@@ -61,12 +76,9 @@ class ZammadApi {
      * @param {*} params associative array in form "param": "value"
      */
     async doGetCallWithParams(endpoint, params) {
-        let response = await axios.get(
-            this.host + endpoints.PREFIX + endpoint,
-            {
-                params,
-            }
-        );
+        let response = await axios.get(endpoint, {
+            params,
+        });
         this._isObjectOrError(response.data);
         this._checkResponseCode(response);
         return response.data;
@@ -78,29 +90,21 @@ class ZammadApi {
      * @param {string|object} body Body of the post request
      */
     async doPostCall(endpoint, body) {
-        let response = await axios.post(
-            this.host + endpoints.PREFIX + endpoint,
-            body
-        );
+        let response = await axios.post(endpoint, body);
         this._isObjectOrError(response.data);
         this._checkResponseCode(response);
         return response.data;
     }
 
     async doPutCall(endpoint, body) {
-        let response = await axios.put(
-            this.host + endpoints.PREFIX + endpoint,
-            body
-        );
+        let response = await axios.put(endpoint, body);
         this._isObjectOrError(response.data);
         this._checkResponseCode(response);
         return response.data;
     }
 
     async doDeleteCall(endpoint) {
-        let response = await axios.delete(
-            this.host + endpoints.PREFIX + endpoint
-        );
+        let response = await axios.delete(endpoint);
         this._isObjectOrError(response.data);
         this._checkResponseCode(response);
         return response.data;
