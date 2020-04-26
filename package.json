@@ -5,7 +5,8 @@
     "main": "index.js",
     "scripts": {
         "test": "jest",
-        "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls"
+        "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
+        "doc": "jsdoc -c .jsdoc.conf"
     },
     "repository": {
         "type": "git",
@@ -16,7 +17,7 @@
         "ticket",
         "helpdesk"
     ],
-    "author": "Exanion UG (haftungsbeschraenkt)",
+    "author": "Exanion UG (https://exanion.de)",
     "license": "Apache-2.0",
     "bugs": {
         "url": "https://github.com/exanion/zammad-js-api/issues"
@@ -28,6 +29,7 @@
         "coveralls": "^3.0.11",
         "express": "^4.17.1",
         "jest": "^25.3.0",
+        "jsdoc": "^3.6.4",
         "randomstring": "^1.1.5"
     },
     "jest": {
@@ -36,5 +38,8 @@
             "/node_modules/",
             "/test"
         ]
-    }
+    },
+    "files": [
+        "src/"
+    ]
 }

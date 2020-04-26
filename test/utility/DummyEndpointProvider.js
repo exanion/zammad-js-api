@@ -6,23 +6,25 @@
 
 const express = require("express");
 
+const PORT_MIN = 3000;
+const PORT_MAX = 4000;
+
 class DummyEndpointProvider {
     /**
-     * Create a new dummy endpoint provider
-     * @param {*} port HTTP port to listen on
+     * Create a new dummy endpoint provider on a random port
      * @param {*} prefix Prefix path for all APIs, without leading slash!
      */
-    constructor(port, prefix) {
-        this.port = port;
+    constructor(prefix) {
+        this.port = PORT_MIN + Math.floor(Math.random() * (PORT_MAX - PORT_MIN));
         this.prefix = prefix;
         this.endpoints = {};
 
         this.app = express();
         this.app.use(express.json());
 
-        this.server = this.app.listen(port, () => {
+        this.server = this.app.listen(this.port, () => {
             console.log(
-                `[Test.DummyEndpointProvider] Started dummy endpoint http provider on port ${port}`
+                `[Test.DummyEndpointProvider] Started dummy endpoint http provider on port ${this.port}`
             );
         });
     }

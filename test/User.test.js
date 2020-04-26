@@ -12,8 +12,8 @@ let api;
 let ep;
 
 beforeAll(() => {
-    ep = new DummyEndpointProvider(3000, "/api/v1");
-    api = new ZammadApi("http://localhost:3000");
+    ep = new DummyEndpointProvider("/api/v1");
+    api = new ZammadApi(`http://localhost:${ep.port}`);
 });
 
 /**
@@ -45,6 +45,9 @@ function createRandomUser() {
  * @param {User} parsedUser user parsed by the implementation
  */
 function checkIfApiUserMatchesParsed(apiUser, parsedUser) {
+    expect(typeof parsedUser).toBe("object");
+    expect(typeof apiUser).toBe("object");
+
     expect(parsedUser.id).toBe(apiUser.id);
     expect(parsedUser.firstname).toBe(apiUser.firstname);
     expect(parsedUser.lastname).toBe(apiUser.lastname);
@@ -65,7 +68,7 @@ test("authenticated user get", async (done) => {
         }
     );
 
-    let response = await User.getAuthenticatedUser(api);
+    let response = await User.getAuthenticated(api);
 
     checkIfApiUserMatchesParsed(randomApiUser, response);
 });
@@ -75,6 +78,7 @@ test("user list get", async (done) => {
     for (i = 0; i < randomApiUsers.length; i++) {
         randomApiUsers[i] = createRandomUser();
     }
+
     ep.createEndpoint(
         DummyEndpointProvider.Method.GET,
         "/users",
@@ -84,7 +88,7 @@ test("user list get", async (done) => {
         }
     );
 
-    let response = await User.getUsers(api);
+    let response = await User.getAll(api);
     let checkedObjects = 0;
 
     for (i = 0; i < response.length; i++) {
@@ -118,7 +122,7 @@ test("user search", async (done) => {
         }
     );
 
-    let response = await User.searchUser(api, queryString);
+    let response = await User.search(api, queryString);
     let checkedObjects = 0;
 
     for (i = 0; i < response.length; i++) {
@@ -145,7 +149,7 @@ test("show user details", async (done) => {
         }
     );
 
-    let response = await User.getUser(api, user.id);
+    let response = await User.getById(api, user.id);
 
     checkIfApiUserMatchesParsed(user, response);
 });
@@ -166,7 +170,7 @@ test("user create", async (done) => {
         }
     );
 
-    user = await User.createUser(api, {
+    user = await User.create(api, {
         firstname: plainUser.firstname,
         lastname: plainUser.lastname,
         email: plainUser.email,

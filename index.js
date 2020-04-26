@@ -1,15 +1,9 @@
-const ZammadApi = require("./src/ZammadApi");
-const User = require("./src/User");
-
-let api = new ZammadApi(
-    "http://zammad.dev.exanion.de",
-    "peter.kappelt@exanion.de",
-    "passw0rd="
-);
-
-let main = async () => {
-    console.log(await User.getUsers(api));
-    await User.getUser(api, 3);
+module.exports = {
+    ApiError: require("./src/ApiError"),
+    Ticket: require("./src/Ticket"),
+    TicketArticle: require("./src/TicketArticle"),
+    TicketPriority: require("./src/TicketPriority"),
+    TicketState: require("./src/TicketState"),
+    User: require("./src/User"),
+    ZammadApi: require("./src/ZammadApi"),
 };
-
-main();

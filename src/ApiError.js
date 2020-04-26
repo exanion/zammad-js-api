@@ -35,9 +35,19 @@ class InvalidRequest extends ApiError {
      * Instantiate a new InvalidRequest error object
      * @param {*} message Message to store
      */
-    constructor(message){
+    constructor(message) {
         super(`[InvalidRequest] ${message}`);
         this.name = "ZammadApiError.InvalidRequest";
+    }
+}
+
+class Unimplemented extends ApiError {
+    /**
+     * Instantiate a new Unimplemented error object
+     */
+    constructor(message = null) {
+        super(`[Unimplemented] ${message}`);
+        this.name = "ZammadApiError.Unimplemented";
     }
 }
 
@@ -45,4 +55,5 @@ module.exports = {
     ApiError,
     UnexpectedResponse,
     InvalidRequest,
+    Unimplemented,
 };

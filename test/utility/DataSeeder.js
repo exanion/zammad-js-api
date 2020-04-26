@@ -36,6 +36,13 @@ class DataSeeder {
         return DataSeeder.randomString(10) + "@" + DataSeeder.randomString(7) + ".com";
     }
 
+    /** 
+     * generate a random bool (true/ false) 
+     */
+    static randomBool(){
+        return (Math.random() > 0.5) ? true:false;
+    }
+
     /**
      * generate a random iso formatted timestamp
      */

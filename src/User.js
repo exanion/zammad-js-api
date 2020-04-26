@@ -5,7 +5,8 @@
 
 const endpoints = require("./Endpoints");
 const ApiError = require("./ApiError");
-const { Validators } = require("./Utility");
+const Utility = require("./Utility");
+const { Validators } = Utility;
 
 class User {
     /**
@@ -56,41 +57,11 @@ class User {
      */
     static fromApiObject(response) {
         //sanity check of api response
-        if (!("id" in response)) {
-            throw new ApiError.UnexpectedResponse(
-                "id attribute missing",
-                "id field",
-                "no id field present"
-            );
-        }
-        if (!("firstname" in response)) {
-            throw new ApiError.UnexpectedResponse(
-                "firstname attribute missing",
-                "firstname field",
-                "no firstname field present"
-            );
-        }
-        if (!("lastname" in response)) {
-            throw new ApiError.UnexpectedResponse(
-                "lastname attribute missing",
-                "lastname field",
-                "no lastname field present"
-            );
-        }
-        if (!("updated_at" in response)) {
-            throw new ApiError.UnexpectedResponse(
-                "updated_at attribute missing",
-                "updated_at field",
-                "no updated_at field present"
-            );
-        }
-        if (!("created_at" in response)) {
-            throw new ApiError.UnexpectedResponse(
-                "created_at attribute missing",
-                "created_at field",
-                "no created_at field present"
-            );
-        }
+        ["id", "firstname", "lastname", "updated_at", "created_at"].forEach(
+            (key) => {
+                Utility.ObjectHasKeyOrUnexpectedResponse(response, key);
+            }
+        );
 
         let user = new User(
             response.id,
@@ -120,19 +91,19 @@ class User {
     /**
      * Serialize the current user object to an API valid json object
      */
-    toApiObject(){
+    toApiObject() {
         let user = {};
 
         user.id = this.id;
         user.firstname = this.firstname;
         user.lastname = this.lastname;
-        if(this.email){
+        if (this.email) {
             user.email = this.email;
         }
-        if(this.note){
+        if (this.note) {
             user.note = this.note;
         }
-        if(this.organizationId && this.organizationName){
+        if (this.organizationId && this.organizationName) {
             user.orgnaization_id = this.organizationId;
             user.organization_name = this.organizationName;
         }
@@ -144,7 +115,7 @@ class User {
      * Gets the user that is currently authenticated for the API
      * @param {ZammadApi} api Initialized API object
      */
-    static async getAuthenticatedUser(api) {
+    static async getAuthenticated(api) {
         let response = await api.doGetCall(endpoints.USER_CURRENT);
         return User.fromApiObject(response);
     }
@@ -154,7 +125,7 @@ class User {
      * only own account otherwise
      * @param {ZammadApi} api Initialized API object
      */
-    static async getUsers(api) {
+    static async getAll(api) {
         let response = await api.doGetCall(endpoints.USER_LIST);
         if (!Array.isArray(response)) {
             throw new ApiError.UnexpectedResponse(
@@ -173,11 +144,11 @@ class User {
     }
 
     /**
-     * Get a user by it's id
+     * Get a user by its id
      * @param {ZammadApi} api Initialized API object
      * @param {number} userId ID of user to get
      */
-    static async getUser(api, userId) {
+    static async getById(api, userId) {
         userId = Validators.AssertInt(userId);
         let response = await api.doGetCall(endpoints.USER_SHOW + userId);
         return User.fromApiObject(response);
@@ -188,7 +159,7 @@ class User {
      * @param {ZammadApi} api Initialized API object
      * @param {string} query Query string
      */
-    static async searchUser(api, query) {
+    static async search(api, query) {
         let response = await api.doGetCallWithParams(endpoints.USER_SEARCH, {
             [endpoints.USER_SEARCH_QUERY]: query,
         });
@@ -219,7 +190,7 @@ class User {
      * @todo data validation
      * @return User that was created
      */
-    static async createUser(api, opt) {
+    static async create(api, opt) {
         //build user object to send to api
         let user = {};
 
@@ -253,14 +224,17 @@ class User {
      */
     async update(api) {
         let user = this.toApiObject();
-        let response = await api.doPutCall(endpoints.USER_UPDATE + this.id, user);
+        let response = await api.doPutCall(
+            endpoints.USER_UPDATE + this.id,
+            user
+        );
     }
 
     /**
      * Delete the current user on remote
      * @param {ZammadApi} api Initialized API object
      */
-    async delete(api){
+    async delete(api) {
         await api.doDeleteCall(endpoints.USER_DELETE + this.id);
     }
 }
