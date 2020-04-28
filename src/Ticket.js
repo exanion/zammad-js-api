@@ -283,7 +283,7 @@ class Ticket {
      * @returns {TicketArticle[]} All articles for this ticket
      */
     async articles(api){
-        return await TicketArticles.getForTicket(api, this.id);
+        return await TicketArticle.getForTicket(api, this.id);
     }
 }
 

@@ -28,6 +28,8 @@ function createRandomArticle() {
     const content_type = DataSeeder.randomString(10);
     const internal = DataSeeder.randomBool();
     const type = DataSeeder.randomString(10);
+    const createdById = DataSeeder.randomId();
+    const updatedById = DataSeeder.randomId();
     const updatedAt = DataSeeder.randomIsoTimestamp();
     const createdAt = DataSeeder.randomIsoTimestamp();
 
@@ -40,6 +42,8 @@ function createRandomArticle() {
         content_type,
         internal,
         type,
+        created_by_id: createdById,
+        updated_by_id: updatedById,
         updated_at: updatedAt,
         created_at: createdAt,
     };
@@ -62,6 +66,8 @@ function checkIfApiArticleMatchesParsed(apiArticle, parsedArticle) {
     expect(parsedArticle.contentType).toBe(apiArticle.content_type);
     expect(parsedArticle.internal).toBe(apiArticle.internal);
     expect(parsedArticle.type).toBe(apiArticle.type);
+    expect(parsedArticle.createdById).toBe(apiArticle.created_by_id);
+    expect(parsedArticle.updatedById).toBe(apiArticle.updated_by_id);
     expect(parsedArticle.updatedAt).toBe(apiArticle.updated_at);
     expect(parsedArticle.createdAt).toBe(apiArticle.created_at);
 }

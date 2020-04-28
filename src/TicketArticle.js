@@ -20,6 +20,8 @@ class TicketArticle {
      * @param {string} contentType MIME type of the body, usually "text/plain"
      * @param {boolean} internal Internal flag
      * @param {string} type Type of the created article, e.g. "phone", "mail"
+     * @param {int} createdById Created by ID
+     * @param {int} updatedById Updated by ID
      * @param {string} updatedAt Updated at timestamp
      * @param {string} createdAt Created at timestamp
      */
@@ -32,6 +34,8 @@ class TicketArticle {
         contentType,
         internal,
         type,
+        createdById,
+        updatedById,
         updatedAt,
         createdAt
     ) {
@@ -43,6 +47,8 @@ class TicketArticle {
         this.contentType = contentType;
         this.internal = internal;
         this.type = type;
+        this.createdById = createdById;
+        this.updatedById = updatedById;
         this.updatedAt = updatedAt;
         this.createdAt = createdAt;
     }
@@ -62,6 +68,8 @@ class TicketArticle {
             "content_type",
             "internal",
             "type",
+            "created_by_id",
+            "updated_by_id",
             "created_at",
             "updated_at",
         ].forEach((key) => {
@@ -77,6 +85,8 @@ class TicketArticle {
             response.content_type,
             response.internal,
             response.type,
+            response.created_by_id,
+            response.updated_by_id,
             response.updated_at,
             response.created_at
         );
