@@ -20,6 +20,7 @@ class TicketArticle {
      * @param {string} contentType MIME type of the body, usually "text/plain"
      * @param {boolean} internal Internal flag
      * @param {string} type Type of the created article, e.g. "phone", "mail"
+     * @param {string} sender Sender of article, e.g. "Agent", "System", "Customer"
      * @param {int} createdById Created by ID
      * @param {int} updatedById Updated by ID
      * @param {string} updatedAt Updated at timestamp
@@ -34,6 +35,7 @@ class TicketArticle {
         contentType,
         internal,
         type,
+        sender,
         createdById,
         updatedById,
         updatedAt,
@@ -47,6 +49,7 @@ class TicketArticle {
         this.contentType = contentType;
         this.internal = internal;
         this.type = type;
+        this.sender = sender;
         this.createdById = createdById;
         this.updatedById = updatedById;
         this.updatedAt = updatedAt;
@@ -68,6 +71,7 @@ class TicketArticle {
             "content_type",
             "internal",
             "type",
+            "sender",
             "created_by_id",
             "updated_by_id",
             "created_at",
@@ -85,6 +89,7 @@ class TicketArticle {
             response.content_type,
             response.internal,
             response.type,
+            response.sender,
             response.created_by_id,
             response.updated_by_id,
             response.updated_at,
