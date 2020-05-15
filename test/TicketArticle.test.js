@@ -29,6 +29,9 @@ function createRandomArticle() {
     const internal = DataSeeder.randomBool();
     const type = DataSeeder.randomString(10);
     const sender = "System";
+    const from = DataSeeder.randomMail();
+    const to = DataSeeder.randomMail();
+    const cc = DataSeeder.randomMail();
     const createdById = DataSeeder.randomId();
     const updatedById = DataSeeder.randomId();
     const updatedAt = DataSeeder.randomIsoTimestamp();
@@ -44,6 +47,9 @@ function createRandomArticle() {
         internal,
         type,
         sender,
+        from,
+        to,
+        cc,
         created_by_id: createdById,
         updated_by_id: updatedById,
         updated_at: updatedAt,
@@ -69,6 +75,9 @@ function checkIfApiArticleMatchesParsed(apiArticle, parsedArticle) {
     expect(parsedArticle.internal).toBe(apiArticle.internal);
     expect(parsedArticle.type).toBe(apiArticle.type);
     expect(parsedArticle.sender).toBe(apiArticle.sender);
+    expect(parsedArticle.from).toBe(apiArticle.from);
+    expect(parsedArticle.to).toBe(apiArticle.to);
+    expect(parsedArticle.cc).toBe(apiArticle.cc);
     expect(parsedArticle.createdById).toBe(apiArticle.created_by_id);
     expect(parsedArticle.updatedById).toBe(apiArticle.updated_by_id);
     expect(parsedArticle.updatedAt).toBe(apiArticle.updated_at);
@@ -144,6 +153,7 @@ test("article create", async (done) => {
 
     article = await TicketArticle.create(api, {
         body: plainArticle.body,
+        ticketId: plainArticle.ticket_id,
         subject: plainArticle.subject,
         contentType: plainArticle.content_type,
         internal: plainArticle.internal,

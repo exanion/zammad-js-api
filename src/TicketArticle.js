@@ -36,6 +36,9 @@ class TicketArticle {
         internal,
         type,
         sender,
+        from,
+        to,
+        cc,
         createdById,
         updatedById,
         updatedAt,
@@ -50,6 +53,9 @@ class TicketArticle {
         this.internal = internal;
         this.type = type;
         this.sender = sender;
+        this.from = from;
+        this.to = to;
+        this.cc = cc;
         this.createdById = createdById;
         this.updatedById = updatedById;
         this.updatedAt = updatedAt;
@@ -72,6 +78,9 @@ class TicketArticle {
             "internal",
             "type",
             "sender",
+            "from",
+            "to",
+            "cc",
             "created_by_id",
             "updated_by_id",
             "created_at",
@@ -90,6 +99,9 @@ class TicketArticle {
             response.internal,
             response.type,
             response.sender,
+            response.from,
+            response.to,
+            response.cc,
             response.created_by_id,
             response.updated_by_id,
             response.updated_at,
@@ -142,6 +154,9 @@ class TicketArticle {
      * @param {ZammadApi} api Initialized API object
      * @param {object} opt article options
      * @param {string} opt.body article body content
+     * @param {number} opt.ticketId Ticket the article shall be created for
+     * @param {string|null} opt.to To address for email article
+     * @param {string|null} opt.cc CC address for email article
      * @param {string|null} opt.subject (Optional) subject of article
      * @param {string|null} opt.contentType (Optional) content type of body
      * @param {boolean} opt.internal (Optional) internal flag for the article, default false
@@ -157,6 +172,10 @@ class TicketArticle {
             throw new ApiError.InvalidRequest("body is required");
         }
         article.body = opt.body;
+        if (!("ticketId" in opt)) {
+            throw new ApiError.InvalidRequest("ticketId is required");
+        }
+        article.ticket_id = opt.ticketId;
 
         //optional fields
         if ("subject" in opt) {
@@ -170,6 +189,12 @@ class TicketArticle {
         }
         if ("type" in opt) {
             article.type = opt.type;
+        }
+        if("to" in opt){
+            article.to = opt.to;
+        }
+        if("cc" in opt){
+            article.cc = opt.cc;
         }
 
         let response = await api.doPostCall(
