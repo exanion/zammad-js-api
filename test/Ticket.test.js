@@ -27,6 +27,7 @@ function createRandomTicket() {
     const number = DataSeeder.randomString(5);
     const title = DataSeeder.randomString(20);
     const customer_id = DataSeeder.randomId();
+    const owner_id = DataSeeder.randomId();
     const note = DataSeeder.randomString(50);
     const updatedAt = DataSeeder.randomIsoTimestamp();
     const createdAt = DataSeeder.randomIsoTimestamp();
@@ -39,6 +40,7 @@ function createRandomTicket() {
         number,
         title,
         customer_id,
+        owner_id,
         note,
         updated_at: updatedAt,
         created_at: createdAt,
@@ -61,6 +63,7 @@ function checkIfApiTicketMatchesParsed(apiTicket, parsedTicket) {
     expect(parsedTicket.number).toBe(apiTicket.number);
     expect(parsedTicket.title).toBe(apiTicket.title);
     expect(parsedTicket.customerId).toBe(apiTicket.customer_id);
+    expect(parsedTicket.ownerId).toBe(apiTicket.owner_id);
     expect(parsedTicket.note).toBe(apiTicket.note);
     expect(parsedTicket.updatedAt).toBe(apiTicket.updated_at);
     expect(parsedTicket.createdAt).toBe(apiTicket.created_at);
@@ -161,6 +164,7 @@ test("ticket create", async (done) => {
             expect(req.body.title).toBe(plainTicket.title);
             expect(req.body.group_id).toBe(plainTicket.group_id);
             expect(req.body.customer_id).toBe(plainTicket.customer_id);
+            expect(req.body.owner_id).toBe(plainTicket.owner_id)
             expect(typeof req.body.article).toBe("object");
             expect(req.body.article.body).toBe(plainTicket.article.body);
             done();
@@ -171,6 +175,7 @@ test("ticket create", async (done) => {
         title: plainTicket.title,
         groupId: plainTicket.group_id,
         customerId: plainTicket.customer_id,
+        ownerId: plainTicket.owner_id,
         articleBody: plainTicket.article.body,
     });
 

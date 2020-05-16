@@ -22,6 +22,7 @@ class Ticket {
      * @param {int} stateId id of the ticket's state
      * @param {in} priorityId id of the ticket's priority
      * @param {int} customerId id of the customer the ticket belongs to
+     * @param {int} ownerId id of the user this ticket is assigned to, 1 (system) if unassigned
      * @param {string|null} note Note for the ticket
      * @param {string} updatedAt Updated at timestamp
      * @param {string} createdAt Created at timestamp
@@ -34,6 +35,7 @@ class Ticket {
         stateId,
         priorityId,
         customerId,
+        ownerId,
         note,
         updatedAt,
         createdAt
@@ -45,6 +47,7 @@ class Ticket {
         this.stateId = stateId;
         this.priorityId = priorityId;
         this.customerId = customerId;
+        this.ownerId = ownerId;
         this.note = note;
         this.updatedAt = updatedAt;
         this.createdAt = createdAt;
@@ -64,10 +67,11 @@ class Ticket {
             "state_id",
             "priority_id",
             "customer_id",
+            "owner_id",
             "note",
             "updated_at",
             "created_at",
-        ].forEach((key) => {
+        ].forEach(key => {
             Utility.ObjectHasKeyOrUnexpectedResponse(response, key);
         });
 
@@ -79,6 +83,7 @@ class Ticket {
             response.state_id,
             response.priority_id,
             response.customer_id,
+            response.owner_id,
             response.note,
             response.updated_at,
             response.created_at
@@ -100,6 +105,7 @@ class Ticket {
         ticket.state_id = this.stateId;
         ticket.priority_id = this.priorityId;
         ticket.customer_id = this.customerId;
+        ticket.owner_id = this.ownerId;
         ticket.note = this.note;
 
         return ticket;
@@ -120,7 +126,7 @@ class Ticket {
         }
 
         let tickets = Array();
-        response.forEach((obj) => {
+        response.forEach(obj => {
             tickets.push(Ticket.fromApiObject(obj));
         });
 
@@ -156,7 +162,7 @@ class Ticket {
         }
 
         let tickets = Array();
-        response.forEach((obj) => {
+        response.forEach(obj => {
             tickets.push(Ticket.fromApiObject(obj));
         });
 
@@ -170,6 +176,7 @@ class Ticket {
      * @param {string} opt.title Ticket title
      * @param {int} opt.groupId Group Id for ticket
      * @param {int} opt.customerId Customer Id for ticket
+     * @param {int} opt.ownerId Owner/ assigned user for ticket. 1 (system) if unassigned
      * @param {string} opt.articleBody Body of article to add (defautlt non-internal note)
      * @param {string} opt.articleSubject (Optional) Subject of ticket article, default null
      * @param {string} opt.articleType (Optional) Type of first article to add, default note
@@ -210,6 +217,9 @@ class Ticket {
         }
         if ("articleInternal" in opt) {
             ticket.article.internal = opt.articleInternal ? true : false;
+        }
+        if ("ownerId" in opt) {
+            ticket.owner_id = opt.ownerId;
         }
 
         let response = await api.doPostCall(endpoints.TICKET_CREATE, ticket);
@@ -252,6 +262,20 @@ class Ticket {
     }
 
     /**
+     * Return the user the ticket is assigned to
+     * Returns system if unassigned
+     * @param {ZammadApi} api Initialized API object
+     * @returns {User} User this ticket is assigned to
+     */
+    async owner(api) {
+        if (this.ownerId) {
+            return await User.getById(api, this.ownerId);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Return the priority for this ticket
      * @param {ZammadApi} api Initialized API object
      * @returns {TicketPriority} priority of this ticket
@@ -282,7 +306,7 @@ class Ticket {
      * @param {ZammadApi} api Initialized API object
      * @returns {TicketArticle[]} All articles for this ticket
      */
-    async articles(api){
+    async articles(api) {
         return await TicketArticle.getForTicket(api, this.id);
     }
 }
