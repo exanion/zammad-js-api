@@ -1,6 +1,6 @@
 {
     "name": "zammad-js-api",
-    "version": "1.0.0",
+    "version": "0.0.1-dev",
     "description": "Zammad API implementation for JS",
     "main": "index.js",
     "scripts": {
