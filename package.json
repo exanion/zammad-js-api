@@ -1,24 +1,45 @@
 {
-  "name": "zammad-js-api",
-  "version": "1.0.0",
-  "description": "Zammad API implementation for JS",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/exanion/zammad-js-api.git"
-  },
-  "keywords": [
-    "zammad",
-    "ticket",
-    "helpdesk"
-  ],
-  "author": "Exanion UG (haftungsbeschraenkt)",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/exanion/zammad-js-api/issues"
-  },
-  "homepage": "https://github.com/exanion/zammad-js-api#readme"
+    "name": "zammad-js-api",
+    "version": "0.1.0",
+    "description": "Zammad API implementation for JS",
+    "main": "index.js",
+    "scripts": {
+        "test": "jest",
+        "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
+        "doc": "jsdoc -c .jsdoc.conf"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/exanion/zammad-js-api.git"
+    },
+    "keywords": [
+        "zammad",
+        "ticket",
+        "helpdesk"
+    ],
+    "author": "Exanion UG (https://exanion.de)",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/exanion/zammad-js-api/issues"
+    },
+    "homepage": "https://github.com/exanion/zammad-js-api#readme",
+    "dependencies": {
+        "axios": "^0.19.2",
+        "axios-debug-log": "^0.7.0",
+        "coveralls": "^3.0.11",
+        "express": "^4.17.1",
+        "jest": "^25.3.0",
+        "jsdoc": "^3.6.4",
+        "randomstring": "^1.1.5"
+    },
+    "jest": {
+        "testEnvironment": "node",
+        "coveragePathIgnorePatterns": [
+            "/node_modules/",
+            "/test"
+        ]
+    },
+    "files": [
+        "src/"
+    ]
 }
