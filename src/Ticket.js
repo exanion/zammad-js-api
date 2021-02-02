@@ -177,7 +177,7 @@ class Ticket {
      * @param {int} opt.groupId Group Id for ticket
      * @param {int} opt.customerId Customer Id for ticket
      * @param {int} opt.ownerId Owner/ assigned user for ticket. 1 (system) if unassigned
-     * @param {string} opt.articleBody Body of article to add (defautlt non-internal note)
+     * @param {string} opt.articleBody Body of article to add (default non-internal note)
      * @param {string} opt.articleSubject (Optional) Subject of ticket article, default null
      * @param {string} opt.articleType (Optional) Type of first article to add, default note
      * @param {boolean} opt.articleInternal (Optional) Set the internal attribute for the article, default false
