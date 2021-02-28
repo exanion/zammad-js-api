@@ -1,0 +1,46 @@
+name: Create Release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version Number of Release (Format x.y.z)"
+        required: true
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check version number validity
+        id: check-version-number
+        run: |
+          if [[ ! "${{ github.event.inputs.version }}" =~ ^([0-9]+)(\.)([0-9]+)(\.)([0-9]+)$ ]]; then
+            echo "Given version number is not valid."
+            echo "Version number is supposed to be x.y.z"
+            exit 1;
+          fi
+      - uses: actions/checkout@v2
+        with:
+          ref: 'dev'
+          persist-credentials: false    #credentials should not be saved in order to use custom PAT
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Create new release brach
+        id: create-release-branch
+        run: |
+          git branch "release-${{ github.event.inputs.version }}"
+          git checkout "release-${{ github.event.inputs.version }}"
+      - name: New NPM version and version file
+        run: |
+          npm --no-git-tag-version version "${{ github.event.inputs.version }}"
+          echo "${{ github.event.inputs.version }}" > VERSION
+      - name: Git commit and tag
+        run: |
+          git config user.name "Exanion Bot"
+          git config user.email travis-builds@exanion.de
+          git add VERSION
+          git add package*.json
+          git commit -m "Created release branch for version ${{ github.event.inputs.version }}"
+          git tag "${{ github.event.inputs.version }}"
+      - name: Git push
+        run: |
+          git push --tags "https://${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git" "release-${{ github.event.inputs.version }}"
