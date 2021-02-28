@@ -28,7 +28,7 @@
         "axios-debug-log": "^0.7.0",
         "coveralls": "^3.0.11",
         "express": "^4.17.1",
-        "jest": "^25.3.0",
+        "jest": "^26.6.3",
         "jsdoc": "^3.6.4",
         "randomstring": "^1.1.5"
     },
