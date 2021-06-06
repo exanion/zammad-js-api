@@ -55,17 +55,20 @@ function checkIfPrioMatchesParsed(apiPrio, parsedPrio) {
     expect(parsedPrio.createdAt).toBe(apiPrio.created_at);
 }
 
-test("ticket priority list get", async (done) => {
+test("ticket priority list get", async () => {
     let randomApiPrios = Array(Math.floor(Math.random() * 9) + 1);
+    let requestMade = false;
+
     for (i = 0; i < randomApiPrios.length; i++) {
         randomApiPrios[i] = createRandomTicketPriority();
     }
+
     ep.createEndpoint(
         DummyEndpointProvider.Method.GET,
         "/ticket_priorities",
         randomApiPrios,
         (req) => {
-            done();
+            requestMade = true;
         }
     );
 
@@ -83,22 +86,26 @@ test("ticket priority list get", async (done) => {
     }
 
     expect(checkedObjects).toBe(randomApiPrios.length);
+    expect(requestMade).toBe(true);
 });
 
-test("show priority details", async (done) => {
+test("show priority details", async () => {
     let prio = createRandomTicketPriority();
+    let requestMade = false;
+
     ep.createEndpoint(
         DummyEndpointProvider.Method.GET,
         "/ticket_priorities/" + prio.id,
         prio,
         (req) => {
-            done();
+            requestMade = true;
         }
     );
 
     let response = await TicketPriority.getById(api, prio.id);
 
     checkIfPrioMatchesParsed(prio, response);
+    expect(requestMade).toBe(true);
 });
 
 test("ticket priority create", () => {

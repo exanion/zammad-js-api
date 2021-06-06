@@ -57,24 +57,29 @@ function checkIfApiUserMatchesParsed(apiUser, parsedUser) {
     expect(parsedUser.createdAt).toBe(apiUser.created_at);
 }
 
-test("authenticated user get", async (done) => {
+test("authenticated user get", async () => {
     let randomApiUser = createRandomUser();
+    let requestMade = false;
+
     ep.createEndpoint(
         DummyEndpointProvider.Method.GET,
         "/users/me",
         randomApiUser,
         (req) => {
-            done();
+            requestMade = true;
         }
     );
 
     let response = await User.getAuthenticated(api);
 
     checkIfApiUserMatchesParsed(randomApiUser, response);
+    expect(requestMade).toBe(true);
 });
 
-test("user list get", async (done) => {
+test("user list get", async () => {
     let randomApiUsers = Array(Math.floor(Math.random() * 9) + 1);
+    let requestMade = false;
+
     for (i = 0; i < randomApiUsers.length; i++) {
         randomApiUsers[i] = createRandomUser();
     }
@@ -84,7 +89,7 @@ test("user list get", async (done) => {
         "/users",
         randomApiUsers,
         (req) => {
-            done();
+            requestMade = true;
         }
     );
 
@@ -102,12 +107,14 @@ test("user list get", async (done) => {
     }
 
     expect(checkedObjects).toBe(randomApiUsers.length);
+    expect(requestMade).toBe(true);
 });
 
-test("user search", async (done) => {
+test("user search", async () => {
     let queryString = DataSeeder.randomString(10);
-
+    let requestMade = false;
     let randomApiUsers = Array(Math.floor(Math.random() * 9) + 1);
+
     for (i = 0; i < randomApiUsers.length; i++) {
         randomApiUsers[i] = createRandomUser();
     }
@@ -118,7 +125,7 @@ test("user search", async (done) => {
         async (req) => {
             //expect to have query string that matches
             expect(req.query).toHaveProperty("query", queryString);
-            done();
+            requestMade = true;
         }
     );
 
@@ -136,26 +143,31 @@ test("user search", async (done) => {
     }
 
     expect(checkedObjects).toBe(randomApiUsers.length);
+    expect(requestMade).toBe(true);
 });
 
-test("show user details", async (done) => {
+test("show user details", async () => {
     let user = createRandomUser();
+    let requestMade = false;
+
     ep.createEndpoint(
         DummyEndpointProvider.Method.GET,
         "/users/" + user.id,
         user,
         (req) => {
-            done();
+            requestMade = true;
         }
     );
 
     let response = await User.getById(api, user.id);
 
     checkIfApiUserMatchesParsed(user, response);
+    expect(requestMade).toBe(true);
 });
 
-test("user create", async (done) => {
+test("user create", async () => {
     let plainUser = createRandomUser();
+    let requestMade = false;
     let user;
 
     ep.createEndpoint(
@@ -166,7 +178,7 @@ test("user create", async (done) => {
             expect(req.body.firstname).toBe(plainUser.firstname);
             expect(req.body.lastname).toBe(plainUser.lastname);
             expect(req.body.email).toBe(plainUser.email);
-            done();
+            requestMade = true;
         }
     );
 
@@ -177,11 +189,13 @@ test("user create", async (done) => {
     });
 
     checkIfApiUserMatchesParsed(plainUser, user);
+    expect(requestMade).toBe(true);
 });
 
-test("user update", async (done) => {
+test("user update", async () => {
     let plainUser = createRandomUser();
     let user = User.fromApiObject(plainUser);
+    let requestMade = false;
 
     ep.createEndpoint(
         DummyEndpointProvider.Method.PUT,
@@ -189,25 +203,29 @@ test("user update", async (done) => {
         plainUser,
         async (req) => {
             checkIfApiUserMatchesParsed(user, req.body);
-            done();
+            requestMade = true;
         }
     );
 
     await user.update(api);
+    expect(requestMade).toBe(true);
 });
 
-test("user delete", async (done) => {
+test("user delete", async () => {
     let plainUser = createRandomUser();
     let user = User.fromApiObject(plainUser);
+    let requestMade = false;
+
     ep.createEndpoint(
         DummyEndpointProvider.Method.DELETE,
         "/users/" + plainUser.id,
         {},
         (req) => {
-            done();
+            requestMade = true;
         }
     );
-    user.delete(api);
+    await user.delete(api);
+    expect(requestMade).toBe(true);
 });
 
 afterAll(() => {

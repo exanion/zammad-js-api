@@ -69,8 +69,10 @@ function checkIfApiTicketMatchesParsed(apiTicket, parsedTicket) {
     expect(parsedTicket.createdAt).toBe(apiTicket.created_at);
 }
 
-test("ticket list get", async (done) => {
+test("ticket list get", async () => {
     let randomApiTickets = Array(Math.floor(Math.random() * 9) + 1);
+    let requestMade = false;
+
     for (i = 0; i < randomApiTickets.length; i++) {
         randomApiTickets[i] = createRandomTicket();
     }
@@ -79,7 +81,7 @@ test("ticket list get", async (done) => {
         "/tickets",
         randomApiTickets,
         (req) => {
-            done();
+            requestMade = true;
         }
     );
 
@@ -97,10 +99,12 @@ test("ticket list get", async (done) => {
     }
 
     expect(checkedObjects).toBe(randomApiTickets.length);
+    expect(requestMade).toBe(true);
 });
 
-test("ticket search", async (done) => {
+test("ticket search", async () => {
     let queryString = DataSeeder.randomString(10);
+    let requestMade = false;
 
     let randomApiTickets = Array(Math.floor(Math.random() * 9) + 1);
     for (i = 0; i < randomApiTickets.length; i++) {
@@ -113,7 +117,7 @@ test("ticket search", async (done) => {
         async (req) => {
             //expect to have query string that matches
             expect(req.query).toHaveProperty("query", queryString);
-            done();
+            requestMade = true;
         }
     );
 
@@ -131,30 +135,35 @@ test("ticket search", async (done) => {
     }
 
     expect(checkedObjects).toBe(randomApiTickets.length);
+    expect(requestMade).toBe(true);
 });
 
-test("show ticket details", async (done) => {
+test("show ticket details", async () => {
     let ticket = createRandomTicket();
+    let requestMade = false;
+
     ep.createEndpoint(
         DummyEndpointProvider.Method.GET,
         "/tickets/" + ticket.id,
         ticket,
         (req) => {
-            done();
+            requestMade = true;
         }
     );
 
     let response = await Ticket.getById(api, ticket.id);
 
     checkIfApiTicketMatchesParsed(ticket, response);
+    expect(requestMade).toBe(true);
 });
 
-test("ticket create", async (done) => {
+test("ticket create", async () => {
     let plainTicket = createRandomTicket();
     plainTicket.article = {
         body: DataSeeder.randomString(30),
     };
     let ticket;
+    let requestMade = false;
 
     ep.createEndpoint(
         DummyEndpointProvider.Method.POST,
@@ -164,10 +173,10 @@ test("ticket create", async (done) => {
             expect(req.body.title).toBe(plainTicket.title);
             expect(req.body.group_id).toBe(plainTicket.group_id);
             expect(req.body.customer_id).toBe(plainTicket.customer_id);
-            expect(req.body.owner_id).toBe(plainTicket.owner_id)
+            expect(req.body.owner_id).toBe(plainTicket.owner_id);
             expect(typeof req.body.article).toBe("object");
             expect(req.body.article.body).toBe(plainTicket.article.body);
-            done();
+            requestMade = true;
         }
     );
 
@@ -180,11 +189,13 @@ test("ticket create", async (done) => {
     });
 
     checkIfApiTicketMatchesParsed(plainTicket, ticket);
+    expect(requestMade).toBe(true);
 });
 
-test("ticket update", async (done) => {
+test("ticket update", async () => {
     let plainTicket = createRandomTicket();
     let ticket = Ticket.fromApiObject(plainTicket);
+    let requestMade = false;
 
     ep.createEndpoint(
         DummyEndpointProvider.Method.PUT,
@@ -192,25 +203,29 @@ test("ticket update", async (done) => {
         plainTicket,
         async (req) => {
             checkIfApiTicketMatchesParsed(ticket, req.body);
-            done();
+            requestMade = true;
         }
     );
 
     await ticket.update(api);
+    expect(requestMade).toBe(true);
 });
 
-test("ticket delete", async (done) => {
+test("ticket delete", async () => {
     let plainTicket = createRandomTicket();
     let ticket = Ticket.fromApiObject(plainTicket);
+    let requestMade = false;
+
     ep.createEndpoint(
         DummyEndpointProvider.Method.DELETE,
         "/tickets/" + plainTicket.id,
         {},
         (req) => {
-            done();
+            requestMade = true;
         }
     );
-    ticket.delete(api);
+    await ticket.delete(api);
+    expect(requestMade).toBe(true);
 });
 
 afterAll(() => {

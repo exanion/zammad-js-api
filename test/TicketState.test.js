@@ -64,17 +64,20 @@ function checkIfStateMatchesParsed(apiState, parsedState) {
     expect(parsedState.createdAt).toBe(apiState.created_at);
 }
 
-test("ticket state list get", async (done) => {
+test("ticket state list get", async () => {
     let randomApiStates = Array(Math.floor(Math.random() * 9) + 1);
+    let requestMade = false;
+
     for (i = 0; i < randomApiStates.length; i++) {
         randomApiStates[i] = createRandomTicketState();
     }
+
     ep.createEndpoint(
         DummyEndpointProvider.Method.GET,
         "/ticket_states",
         randomApiStates,
         (req) => {
-            done();
+            requestMade = true;
         }
     );
 
@@ -92,22 +95,26 @@ test("ticket state list get", async (done) => {
     }
 
     expect(checkedObjects).toBe(randomApiStates.length);
+    expect(requestMade).toBe(true);
 });
 
-test("show state details", async (done) => {
+test("show state details", async () => {
     let state = createRandomTicketState();
+    let requestMade = false;
+
     ep.createEndpoint(
         DummyEndpointProvider.Method.GET,
         "/ticket_states/" + state.id,
         state,
         (req) => {
-            done();
+            requestMade = true;
         }
     );
 
     let response = await TicketState.getById(api, state.id);
 
     checkIfStateMatchesParsed(state, response);
+    expect(requestMade).toBe(true);
 });
 
 test("ticket state create", () => {

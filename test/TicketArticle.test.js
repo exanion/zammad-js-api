@@ -84,8 +84,10 @@ function checkIfApiArticleMatchesParsed(apiArticle, parsedArticle) {
     expect(parsedArticle.createdAt).toBe(apiArticle.created_at);
 }
 
-test("article by ticket id", async (done) => {
+test("article by ticket id", async () => {
     let randomApiArticles = Array(Math.floor(Math.random() * 9) + 1);
+    let requestMade = false;
+
     for (i = 0; i < randomApiArticles.length; i++) {
         randomApiArticles[i] = createRandomArticle();
     }
@@ -94,7 +96,7 @@ test("article by ticket id", async (done) => {
         "/ticket_articles/by_ticket/" + randomApiArticles[0].ticket_id,
         randomApiArticles,
         (req) => {
-            done();
+            requestMade = true;
         }
     );
 
@@ -115,27 +117,32 @@ test("article by ticket id", async (done) => {
     }
 
     expect(checkedObjects).toBe(randomApiArticles.length);
+    expect(requestMade).toBe(true);
 });
 
-test("show article details", async (done) => {
+test("show article details", async () => {
     let article = createRandomArticle();
+    let requestMade = false;
+
     ep.createEndpoint(
         DummyEndpointProvider.Method.GET,
         "/ticket_articles/" + article.id,
         article,
         (req) => {
-            done();
+            requestMade = true;
         }
     );
 
     let response = await TicketArticle.getById(api, article.id);
 
     checkIfApiArticleMatchesParsed(article, response);
+    expect(requestMade).toBe(true);
 });
 
-test("article create", async (done) => {
+test("article create", async () => {
     let plainArticle = createRandomArticle();
     let article;
+    let requestMade = false;
 
     ep.createEndpoint(
         DummyEndpointProvider.Method.POST,
@@ -147,7 +154,7 @@ test("article create", async (done) => {
                     expect(req.body[key]).toBe(plainArticle[key]);
                 }
             );
-            done();
+            requestMade = true;
         }
     );
 
@@ -161,6 +168,7 @@ test("article create", async (done) => {
     });
 
     checkIfApiArticleMatchesParsed(plainArticle, article);
+    expect(requestMade).toBe(true);
 });
 
 afterAll(() => {
