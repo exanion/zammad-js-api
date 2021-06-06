@@ -1,6 +1,6 @@
 {
     "name": "zammad-js-api",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "description": "Zammad API implementation for JS",
     "main": "index.js",
     "scripts": {
@@ -25,7 +25,9 @@
     "homepage": "https://github.com/exanion/zammad-js-api#readme",
     "dependencies": {
         "axios": "^0.21.1",
-        "axios-debug-log": "^0.8.2",
+        "axios-debug-log": "^0.8.2"
+    },
+    "devDependencies": {
         "coveralls": "^3.0.11",
         "express": "^4.17.1",
         "jest": "^27.0.4",
