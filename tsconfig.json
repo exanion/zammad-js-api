@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "allowJs": true,
+    "checkJs": false,
+    "outDir": "dist",
+    "rootDir": ".",
+    "strict": false,
+    "esModuleInterop": true, 
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true, 
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+     "*": [
+       "*",
+       "src/*",
+       "src/setup/*",
+       "src/logic/*",
+       "src/models/*",
+       "config/*"
+     ]
+   },
+  },
+   "exclude": ["node_modules", "dist"],
+   "include": [
+     "./src",
+     "./test",
+     "./*",
+     "./config" 
+   ]
+ }

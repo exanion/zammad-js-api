@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "jest",
+        "build": "./node_modules/typescript/bin/tsc",
         "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
         "doc": "jsdoc -c .jsdoc.conf"
     },
@@ -25,7 +26,8 @@
     "homepage": "https://github.com/exanion/zammad-js-api#readme",
     "dependencies": {
         "axios": "^0.21.1",
-        "axios-debug-log": "^0.8.2"
+        "axios-debug-log": "^0.8.2",
+        "typescript": "^4.5.2"
     },
     "devDependencies": {
         "coveralls": "^3.0.11",
