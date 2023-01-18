@@ -24,7 +24,7 @@
     },
     "homepage": "https://github.com/exanion/zammad-js-api#readme",
     "dependencies": {
-        "axios": "^0.21.1",
+        "axios": "^1.2.3",
         "axios-debug-log": "^0.8.2"
     },
     "devDependencies": {
